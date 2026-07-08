@@ -26,7 +26,6 @@
     boot.kernelParams = ["acpi_backlight=native" "pcie_aspm=off"];
 
     networking.hostName = "nixos";
-    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
     systemd.network.networks."10-enp2s0" = {
       matchConfig.Name = "enp2s0";
