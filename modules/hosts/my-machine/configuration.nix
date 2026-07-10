@@ -97,7 +97,7 @@
 
       displayManager = {
         gdm.enable = true;
-        defaultSession = "niri";
+        defaultSession = "none+i3";
       };
 
       desktopManager.gnome.enable = false;
@@ -138,6 +138,8 @@
     systemd.user.services.picom.serviceConfig.ExecStart =
       lib.mkForce
       "${pkgs.picom}/bin/picom --config ${pkgs.writeText "picom.conf" (builtins.readFile ../../../configs/picom.conf)}";
+
+    services.logind.settings.Login.HandleLidSwitch = "ignore";
 
     services.gvfs.enable = true;
     services.udisks2.enable = true;
@@ -208,12 +210,6 @@
     environment.systemPackages = with pkgs; [
       vim
       git
-      (brave.override {
-        commandLineArgs = [
-          "--enable-features=UseOzonePlatform"
-          "--ozone-platform=x11"
-        ];
-      })
       discord
       kitty
       fastfetch
@@ -232,7 +228,6 @@
       mpv
       yt-dlp
       rofi
-      xwallpaper
       picom
       keyd
       bat
@@ -247,6 +242,8 @@
       xclip
       lxappearance
       deno
+      vlc
+      htop
     ];
 
     environment.pathsToLink = ["/share/icons"];

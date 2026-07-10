@@ -6,6 +6,7 @@
   flake.nixosModules.nvf = {pkgs, ...}: {
     environment.systemPackages = [
       self.packages.${pkgs.stdenv.hostPlatform.system}.neovim
+      pkgs.vimPlugins.whichpy-nvim
     ];
   };
 
@@ -20,7 +21,7 @@
                 enable = true;
                 name = "gruvbox";
                 style = "dark";
-                transparent = false;
+                transparent = true;
               };
 
               statusline = {
@@ -52,6 +53,13 @@
               snippets.luasnip.enable = true;
               notify.nvim-notify.enable = true;
               comments.comment-nvim.enable = true;
+
+              extraPlugins = {
+                whichpy = {
+                  package = pkgs.vimPlugins.whichpy-nvim;
+                  setup = "require('whichpy')";
+                };
+              };
 
               lsp = {
                 enable = true;
