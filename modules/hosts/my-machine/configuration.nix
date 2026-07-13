@@ -223,7 +223,6 @@
       ripgrep
       ethtool
       cava
-      cmatrix
       nixd
       nodejs
       mpv
@@ -237,15 +236,12 @@
       networkmanagerapplet
       feh
       dunst
-      libnotify
       xclip
-      lxappearance
-      deno
       vlc
       htop
       unrar
-      scrot
       slop
+      maim
     ];
 
     environment.pathsToLink = ["/share/icons"];
