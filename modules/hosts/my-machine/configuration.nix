@@ -110,7 +110,7 @@
           ids = ["*"];
           settings = {
             main = {
-              capslock = "overload(control, esc)";
+              capslock = "esc";
               esc = "capslock";
             };
           };
@@ -118,14 +118,15 @@
       };
     };
 
-    location = {
-      provider = "manual";
-      latitude = 41.72;
-      longitude = 44.79;
+    location.provider = "geoclue2";
+
+    services.geoclue2 = {
+      enable = true;
     };
 
     services.redshift = {
       enable = true;
+
       temperature = {
         day = 3000;
         night = 3000;
@@ -237,13 +238,14 @@
       feh
       dunst
       libnotify
-      maim
-      slop
       xclip
       lxappearance
       deno
       vlc
       htop
+      unrar
+      scrot
+      slop
     ];
 
     environment.pathsToLink = ["/share/icons"];

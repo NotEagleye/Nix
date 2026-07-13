@@ -6,11 +6,15 @@
   flake.nixosModules.nvf = {pkgs, ...}: {
     environment.systemPackages = [
       self.packages.${pkgs.stdenv.hostPlatform.system}.neovim
-      pkgs.vimPlugins.whichpy-nvim
+      pkgs.basedpyright
     ];
   };
 
-  perSystem = {pkgs, ...}: {
+  perSystem = {
+    pkgs,
+    lib,
+    ...
+  }: {
     packages.neovim =
       (inputs.nvf.lib.neovimConfiguration {
         inherit pkgs;
@@ -21,7 +25,6 @@
                 enable = true;
                 name = "gruvbox";
                 style = "dark";
-                transparent = true;
               };
 
               statusline = {
@@ -57,7 +60,7 @@
               extraPlugins = {
                 whichpy = {
                   package = pkgs.vimPlugins.whichpy-nvim;
-                  setup = "require('whichpy')";
+                  setup = "require(\"whichpy\").setup {}";
                 };
               };
 
@@ -67,7 +70,9 @@
                 formatOnSave = true;
                 trouble.enable = true;
 
-                # servers.nixd.formatting.command = ["alejandra"];
+                servers = {
+                  basedpyright.cmd = lib.mkForce ["basedpyright-langserver" "--stdio"];
+                };
               };
 
               languages = {
@@ -84,8 +89,16 @@
                   };
                 };
 
+                python = {
+                  enable = true;
+
+                  lsp = {
+                    enable = true;
+                    servers = ["basedpyright"];
+                  };
+                };
+
                 lua.enable = true;
-                python.enable = true;
               };
 
               keymaps = [
@@ -95,6 +108,13 @@
                   action = "<cmd>Neotree toggle reveal<cr>";
                   silent = true;
                   desc = "Toggle Neo-tree";
+                }
+                {
+                  mode = "n";
+                  key = "<C-n>";
+                  action = "<cmd>nohlsearch<cr>";
+                  silent = true;
+                  desc = "Disable search highlight";
                 }
               ];
 
