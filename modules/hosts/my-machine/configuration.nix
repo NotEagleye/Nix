@@ -242,6 +242,13 @@
       unrar
       slop
       maim
+      qbittorrent
+      heroic
+      aria2
+      rojo
+      wally
+      luau-lsp
+      selene
     ];
 
     environment.pathsToLink = ["/share/icons"];

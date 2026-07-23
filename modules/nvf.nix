@@ -25,6 +25,7 @@
                 enable = true;
                 name = "gruvbox";
                 style = "dark";
+                transparent = false;
               };
 
               statusline = {
@@ -61,6 +62,51 @@
                 whichpy = {
                   package = pkgs.vimPlugins.whichpy-nvim;
                   setup = "require(\"whichpy\").setup {}";
+                };
+
+                nvim-lint = {
+                  package = pkgs.vimPlugins.nvim-lint;
+                  setup = ''
+                    require("lint").linters_by_ft = {
+                      luau = { "selene" },
+                      lua = { "selene" },
+                    }
+
+                    vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+                      group = vim.api.nvim_create_augroup("SeleneLinting", { clear = true }),
+                      pattern = { "*.luau", "*.lua" },
+                      callback = function()
+                        require("lint").try_lint()
+                      end,
+                    })
+                  '';
+                };
+
+                luau-lsp-nvim = {
+                  package = pkgs.vimUtils.buildVimPlugin {
+                    name = "luau-lsp.nvim";
+                    src = pkgs.fetchFromGitHub {
+                      owner = "lopi-py";
+                      repo = "luau-lsp.nvim";
+                      rev = "main";
+                      hash = "sha256-w1QF0PeaDjxp05wpwCkK9DYldYOnhrE1u3h10/2jmSw=";
+                    };
+                  };
+                  setup = ''
+                      vim.filetype.add({
+                      extension = {
+                        lua = "luau",
+                      },
+                    })
+
+                    vim.schedule(function()
+                      require("luau-lsp").setup({
+                        platform = { type = "roblox" },
+                        sourcemap = { enabled = true, autogenerate = true, rojo_project_file = "default.project.json" },
+                        plugin = { enabled = true, port = 3667 },
+                      })
+                    end)
+                  '';
                 };
               };
 
