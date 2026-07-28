@@ -21,6 +21,13 @@
         modules = [
           {
             vim = {
+              extraPackages = [
+                pkgs.luau-lsp
+                pkgs.selene
+                pkgs.rojo
+                pkgs.stylua
+              ];
+
               theme = {
                 enable = true;
                 name = "gruvbox";
@@ -56,7 +63,7 @@
               presence.neocord.enable = true;
               snippets.luasnip.enable = true;
               notify.nvim-notify.enable = true;
-              comments.comment-nvim.enable = true;
+              comments.comment-nvim.enable = false;
 
               extraPlugins = {
                 whichpy = {
@@ -93,9 +100,13 @@
                     };
                   };
                   setup = ''
-                      vim.filetype.add({
+                    vim.filetype.add({
                       extension = {
-                        lua = "luau",
+                        lua = "lua",
+                        luau = "luau",
+                      },
+                      pattern = {
+                        [".*$.luau"] = "luau",
                       },
                     })
 
@@ -104,6 +115,13 @@
                         platform = { type = "roblox" },
                         sourcemap = { enabled = true, autogenerate = true, rojo_project_file = "default.project.json" },
                         plugin = { enabled = true, port = 3667 },
+                        fflags = {
+                          enable_new_solver = true,
+                          sync = true,
+                          override = {
+                            LuauSolverV2 = "True",
+                          },
+                        },
                       })
                     end)
                   '';
@@ -118,6 +136,18 @@
 
                 servers = {
                   basedpyright.cmd = lib.mkForce ["basedpyright-langserver" "--stdio"];
+                };
+              };
+
+              formatter = {
+                conform-nvim = {
+                  enable = true;
+                  setupOpts = {
+                    formatters_by_ft = {
+                      lua = ["stylua"];
+                      luau = ["stylua"];
+                    };
+                  };
                 };
               };
 
@@ -144,7 +174,12 @@
                   };
                 };
 
-                lua.enable = true;
+                lua = {
+                  enable = true;
+                  format = {
+                    enable = true;
+                  };
+                };
               };
 
               keymaps = [
@@ -161,6 +196,26 @@
                   action = "<cmd>nohlsearch<cr>";
                   silent = true;
                   desc = "Disable search highlight";
+                }
+                {
+                  mode = "n";
+                  key = "<C-r>";
+                  action = "<cmd>lua vim.lsp.buf.rename()<cr>";
+                  desc = "Rename symbol (LSP)";
+                }
+                {
+                  mode = "n";
+                  key = "<C-S-k>";
+                  action = "<cmd>lua vim.diagnostic.open_float()<cr>";
+                  silent = true;
+                  desc = "Show line diagnostics";
+                }
+                {
+                  mode = "n";
+                  key = "<C-S-l>";
+                  action = "<cmd>lsp restart<cr>";
+                  silent = true;
+                  desc = "Restart LSP";
                 }
               ];
 

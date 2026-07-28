@@ -15,6 +15,7 @@
       self.nixosModules.nvf
       self.nixosModules.youtui
       self.nixosModules.helium
+      self.nixosModules.wally-package-types
     ];
 
     boot.loader.systemd-boot.enable = true;
