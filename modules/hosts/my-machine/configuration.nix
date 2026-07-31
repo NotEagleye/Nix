@@ -11,8 +11,8 @@
   }: {
     imports = [
       self.nixosModules.myMachineHardware
+      self.nixosModules.nixcats-nvim
       self.nixosModules.niri
-      self.nixosModules.nvf
       self.nixosModules.youtui
       self.nixosModules.helium
       self.nixosModules.wally-package-types

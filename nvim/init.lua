@@ -1,0 +1,11 @@
+require("config.options")
+require("config.keymaps")
+
+require("plugins.ui")
+require("plugins.format")
+require("plugins.lint")
+require("plugins.treesitter")
+require("plugins.cmp")
+require("plugins.autopairs")
+require("plugins.harpoon")
+require("plugins.lsp")
