@@ -26,6 +26,7 @@
                 pkgs.selene
                 pkgs.rojo
                 pkgs.stylua
+                pkgs.basedpyright
               ];
 
               theme = {
@@ -36,20 +37,13 @@
               };
 
               statusline = {
-                lualine = {
-                  enable = true;
-                };
+                lualine.enable = true;
               };
 
               opts = {
                 tabstop = 2;
                 shiftwidth = 2;
                 softtabstop = 2;
-
-                indentexpr = "v:lua.vim.treesitter.indent()";
-
-                autoindent = false;
-                smartindent = false;
                 expandtab = true;
               };
 
@@ -63,7 +57,24 @@
               presence.neocord.enable = true;
               snippets.luasnip.enable = true;
               notify.nvim-notify.enable = true;
-              comments.comment-nvim.enable = false;
+
+              luaConfigRC.luasnip-unlink = ''
+                vim.api.nvim_create_autocmd("ModeChanged", {
+                  group = vim.api.nvim_create_augroup("UnlinkLuaSnipSnippetOnModeChange", { clear = true }),
+                  pattern = { "s:n", "i:*" },
+                  desc = "Forget current snippet when leaving insert mode",
+                  callback = function(evt)
+                    local luasnip = require("luasnip")
+                    while true do
+                      if luasnip.session and luasnip.session.current_nodes[evt.buf] and not luasnip.session.jump_active then
+                        luasnip.unlink_current()
+                      else
+                        break
+                      end
+                    end
+                  end,
+                })
+              '';
 
               extraPlugins = {
                 whichpy = {
@@ -130,13 +141,8 @@
 
               lsp = {
                 enable = true;
-
                 formatOnSave = true;
                 trouble.enable = true;
-
-                servers = {
-                  basedpyright.cmd = lib.mkForce ["basedpyright-langserver" "--stdio"];
-                };
               };
 
               formatter = {
@@ -212,9 +218,8 @@
                 }
                 {
                   mode = "n";
-                  key = "<C-S-l>";
+                  key = "<C-S-p>";
                   action = "<cmd>lsp restart<cr>";
-                  silent = true;
                   desc = "Restart LSP";
                 }
               ];
@@ -223,8 +228,6 @@
                 cinnamon-nvim.enable = true;
                 fidget-nvim.enable = true;
                 nvim-web-devicons.enable = true;
-                nvim-cursorline.enable = true;
-
                 blink-indent.enable = true;
               };
 
@@ -241,12 +244,6 @@
 
               utility = {
                 diffview-nvim.enable = true;
-                multicursors.enable = true;
-
-                motion = {
-                  hop.enable = true;
-                  leap.enable = true;
-                };
               };
 
               ui = {

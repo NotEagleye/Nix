@@ -16,6 +16,7 @@
       self.nixosModules.youtui
       self.nixosModules.helium
       self.nixosModules.wally-package-types
+      self.nixosModules.froststrap
     ];
 
     boot.loader.systemd-boot.enable = true;
@@ -250,6 +251,9 @@
       wally
       luau-lsp
       selene
+      figma-linux
+      xdg-utils
+      universal-android-debloater
     ];
 
     environment.pathsToLink = ["/share/icons"];
