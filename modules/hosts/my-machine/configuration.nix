@@ -14,6 +14,7 @@
       self.nixosModules.nixcats-nvim
       self.nixosModules.niri
       self.nixosModules.youtui
+      self.nixosModules.termusic
       self.nixosModules.helium
       self.nixosModules.wally-package-types
       self.nixosModules.froststrap
@@ -254,6 +255,8 @@
       figma-linux
       xdg-utils
       universal-android-debloater
+      xclicker
+      ffmpeg
     ];
 
     environment.pathsToLink = ["/share/icons"];
