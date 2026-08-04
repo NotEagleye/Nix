@@ -26,23 +26,34 @@
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.kernelParams = ["acpi_backlight=native" "amd_pstate=active"];
+    boot.kernelModules = [ "wireguard" ];
+
+    boot.kernel.sysctl = {
+      "net.ipv6.conf.all.disable_ipv6" = 1;
+      "net.ipv6.conf.default.disable_ipv6" = 1;
+      "net.ipv6.conf.lo.disable_ipv6" = 1;
+
+      "net.core.default_qdisc" = "fq";
+      "net.ipv4.tcp_congestion_control" = "bbr";
+
+      "net.ipv4.tcp_mtu_probing" = 1;
+    };
 
     networking.hostName = "nixos";
-
-    systemd.network.networks."10-enp2s0" = {
-      matchConfig.Name = "enp2s0";
-      linkConfig = {
-        Speed = 100;
-        Duplex = "full";
-        AutoNegotiation = false;
-      };
-      networkConfig.DHCP = "yes";
-    };
 
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
     networking.networkmanager.enable = true;
+
+    networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
+    networking.networkmanager.dns = "none";
+    networking.networkmanager.wifi.powersave = false;
+
+    networking.wg-quick.interfaces.warp = {
+      autostart = true; 
+      configFile = "/etc/nixos/wgcf-warp.conf";
+    };
 
     hardware.graphics.enable = true;
 
@@ -197,7 +208,7 @@
     programs.virt-manager.enable = true;
 
     fonts = {
-      enableDefaultPackages = true;
+      enableDefaultPackages = lib.mkDefault true;
       packages = with pkgs; [
         nerd-fonts.jetbrains-mono
       ];
@@ -260,6 +271,7 @@
       universal-android-debloater
       xclicker
       ffmpeg
+      wgcf
     ];
 
     environment.pathsToLink = ["/share/icons"];
