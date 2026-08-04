@@ -13,7 +13,6 @@
       self.nixosModules.myMachineHardware
       self.nixosModules.nixcats-nvim
       self.nixosModules.niri
-      self.nixosModules.youtui
       self.nixosModules.termusic
       self.nixosModules.helium
       self.nixosModules.wally-package-types
@@ -26,7 +25,7 @@
     boot.loader.systemd-boot.configurationLimit = 5;
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
-    boot.kernelParams = ["acpi_backlight=native" "pcie_aspm=off"];
+    boot.kernelParams = ["acpi_backlight=native" "amd_pstate=active"];
 
     networking.hostName = "nixos";
 
@@ -52,6 +51,8 @@
       open = false;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+      powerManagement.enable = true;
     };
 
     hardware.bluetooth = {
@@ -75,6 +76,8 @@
       LC_TELEPHONE = "en_US.UTF-8";
       LC_TIME = "en_US.UTF-8";
     };
+
+    services.power-profiles-daemon.enable = true;
 
     services = {
       xserver = {
