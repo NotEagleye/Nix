@@ -33,6 +33,32 @@
         executable = true;
       };
 
+      programs.zsh = {
+        enable = true;
+        enableCompletion = true;
+        autosuggestion.enable = true;
+        syntaxHighlighting.enable = true;
+
+        history = {
+          size = 10000;
+          save = 10000;
+          path = "$HOME/.zsh_history";
+          ignoreDups = true;
+          share = true;
+        };
+
+        shellAliases = {
+          ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+        };
+
+        initContent = ''
+          eval "$(${pkgs.starship}/bin/starship init zsh)"
+
+          zstyle ':completion:*' menu select
+          zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
+        '';
+      };
+
       xsession.windowManager.i3 =
       let
         Wallpaper = Assets + "Wallpapers/NixOSMocha.png";

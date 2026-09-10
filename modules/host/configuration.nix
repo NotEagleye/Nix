@@ -106,16 +106,6 @@
 
     programs.zsh = {
       enable = true;
-      enableCompletion = true;
-      autosuggestions.enable = true;
-      syntaxHighlighting.enable = true;
-
-      interactiveShellInit = ''
-        eval "$(${pkgs.starship}/bin/starship init zsh)"
-      
-        zstyle ':completion:*' menu select
-        zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
-      '';
     };
 
     fonts.packages = with pkgs; [
