@@ -21,9 +21,12 @@
       xdg.configFile = {
         "dunst".source         = Config + "dunst";
         "fastfetch".source     = Config + "fastfetch";
-        "picom.conf".source    = Config + "picom.conf";
         "polybar".source       = Config + "polybar";
         "rofi".source          = Config + "rofi";
+
+        "mpd/mpd.conf".source = Config + "mpd.conf";
+
+        "picom.conf".source    = Config + "picom.conf";
         "starship.toml".source = Config + "starship.toml";
       };
 
@@ -49,6 +52,8 @@
 
         shellAliases = {
           ns = "nix-search-tv print | fzf --preview 'nix-search-tv preview {}' --scheme history";
+          dl-song = "yt-dlp -x --audio-format opus --embed-thumbnail --embed-metadata --embed-subs --sub-langs all -o \"$HOME/Music/%(title)s.%(ext)s\"";
+          dl-album = "yt-dlp -x --audio-format opus --embed-thumbnail --embed-metadata --embed-subs --sub-langs all -o \"$HOME/Music/%(playlist_index)s - %(title)s.%(ext)s\"";
         };
 
         initContent = ''
@@ -75,7 +80,7 @@
               bars = [];
 
               fonts = {
-                names = [ "JetBrainsMono Nerd" ];
+                names = [ "JetBrainsMono Nerd Font" ];
                 size = 10.0;
               };
 
@@ -216,7 +221,7 @@
           enable_audio_bell = "no";
           mouse_hide_wait = -1;
 
-          background_opacity = "0.8";
+          background_opacity = "1";
           dynamic_background_opacity = "yes";
           cursor_shape = "block";
           enabled_layouts = "tall";

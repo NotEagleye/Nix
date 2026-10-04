@@ -7,8 +7,6 @@
 
   perSystem = {
     pkgs,
-    system,
-    lib,
     ...
   }: {
     packages.Helium = let

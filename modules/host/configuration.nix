@@ -10,6 +10,8 @@
       # Programs
       self.nixosModules.Froststrap
       self.nixosModules.Helium
+      self.nixosModules.SKLauncher
+      self.nixosModules.tModLoader
 
       # Home
       self.nixosModules.HomeManager
@@ -22,6 +24,9 @@
     boot.kernelParams = [ "acpi_backlight=native" "amd_pstate=active" "nvidia_drm.modeset=1" ];
 
     networking.hostName = "nixos";
+
+    networking.firewall.allowedTCPPorts = [ 7777 ];
+    networking.firewall.allowedUDPPorts = [ 7777 ];
 
     hardware.graphics = {
       enable = true;
@@ -73,9 +78,6 @@
       };
     };
 
-    # services.displayManager.sddm.enable = true;
-    # services.desktopManager.plasma6.enable = true;
-
     services.displayManager.ly = {
       enable = true;
       settings = {
@@ -93,6 +95,12 @@
       variant = "";
     };
 
+    services.flatpak.enable = true;
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    };
+
     services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
@@ -104,18 +112,30 @@
       #wireplumber.enable = true;
     };
 
+    virtualisation.libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+      };
+    };
+
     programs.zsh = {
       enable = true;
     };
 
+    programs.nix-ld.enable = true;
+
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      nerd-fonts.fira-code
     ];
 
     users.users."lenovo" = {
       isNormalUser = true;
       description = "Lenovo";
-      extraGroups = [ "networkmanager" "wheel" ];
+      extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
       # packages = with pkgs; [ ];
     };
 
@@ -124,11 +144,15 @@
 
     environment.sessionVariables = {
       TERMINAL = "kitty";
+      EDITOR = "nvim";
     };
 
     environment.systemPackages = with pkgs; [
       # wm/de + utils
       i3 rofi polybar
+
+      # sound
+      pulseaudio
 
       # compositor
       picom
@@ -139,8 +163,14 @@
       # notification
       dunst libnotify
 
+      # virtualisation
+      virt-manager
+
       # image
       xclip maim
+
+      # editing
+      avidemux
       
       # editors
       vim
@@ -149,7 +179,7 @@
       ripgrep
 
       # utils
-      wget steam-run steamcmd fastfetch git yt-dlp brightnessctl fzf networkmanagerapplet btop
+      wget steam-run steamcmd fastfetch git yt-dlp brightnessctl fzf networkmanagerapplet btop gpu-screen-recorder-ui
 
       # terminal
       kitty
