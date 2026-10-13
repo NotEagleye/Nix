@@ -11,7 +11,6 @@
       self.nixosModules.Froststrap
       self.nixosModules.Helium
       self.nixosModules.SKLauncher
-      self.nixosModules.tModLoader
 
       # Home
       self.nixosModules.HomeManager
